@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block my_content %}
+	<!--HOME SECTION END-->
+    <section style="height: 800px">
+        <div class="col-md-offset-2" style="width: 1000px; height: 650px">
+            <table class="table" style="vertical-align: middle">
+              <tbody>
+                  {% for post in datas['info_list'] %}
+                      <tr style="margin-bottom: 20px">
+                          <td style="width: 100px">
+                              <form id="author_info" action="/author_detail" method="post">
+                                  <input type='hidden' name='author_detail' value="{{ post }}"/>
+                                  <a href="javascript:void(0);" onclick ="post()" > {{ post[0] }} </a>
+                              </form>
+                          </td>
+                          <td style="text-align: center">
+                              文章数量：{{ post[1][-1] }}
+                          </td>
+                      </tr>
+                      <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            机构：{{ post[1][1] }}
+                        </td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-offset-4" style="margin-bottom: 50px">
+            <ul class="pagination">
+               {% if datas.show_shouye_status==1%}
+                   <li class=''><a href="{{ url_for('authors', keywords=keywords, p=1 ) }}">首页</a></li>
+                   <li class=''><a href="{{ url_for('authors', keywords=keywords, p=datas.p - 1 ) }}">上一页</a></li>
+               {%endif%}
+
+               {% for dic in datas.dic_list %}
+                   {% if dic==datas.p%}
+                     <li class="active"><a href="{{ url_for('authors', keywords=keywords, p=dic ) }}">{{dic}}</a></li>
+                   {%else%}
+                       <li><a href="{{ url_for('authors', keywords=keywords, p=dic ) }}">{{dic}}</a></li>
+                   {%endif%}
+               {%endfor%}
+
+               {% if datas.p < datas.total%}
+                    <li class=''><a href="{{ url_for('authors', keywords=keywords, p=datas.p + 1 ) }}">下一页</a></li>
+                    <li class=''><a href="{{ url_for('authors', keywords=keywords, p=datas.total ) }}">尾页</a></li>
+               {%endif%}
+                共{{datas.total}}页
+            </ul>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+    function post(){
+        {#$("#coauthor").attr("action",path);#}
+        {#alert("hello world")#}
+        document.getElementById("author_info").submit();
+    }
+</script>
+{% endblock %}
+

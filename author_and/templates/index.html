@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block my_content %}
+	<!--HOME SECTION END-->
+    <section id="search-domain" style="height: 400px; margin-top: 40px">
+        <div class="container">
+            <div class="row" style="margin-left: 180px">
+              <form id="search-value" method="post" action="/authors">
+                  <div class="col-md-8">
+                      <input type="text" class="form-control input-cls" name="keyword"/>
+                      <input type="hidden" name="p" value="1"/>
+                  </div>
+                  <div class="col-md-4">
+                      <input type="submit" class="btn btn-info btn-lg btn-set" value="SEARCH" />
+                  </div>
+              </form>
+            </div>
+            <div style="width:250px; margin-left: 200px" >
+                <table class="table text-nowrap" style="width: 100px">
+                   <tbody>
+                      <tr>
+                          <td>
+                            <a href="{{ url_for('authors', keywords='Gynecology', p=1) }}">Gynecology</a>
+                          </td>
+                          <td>
+                              <a href="{{ url_for('authors', keywords='Neoplasms', p=1) }}">Neoplasms</a>
+                          </td>
+                          <td>
+                              <a href="{{ url_for('authors', keywords='Allergy and Immunology', p=1) }}">Allergy and Immunology</a>
+                          </td>
+                          <td>
+                              <a href="{{ url_for('authors', keywords='Reproductive Medicine', p=1) }}">Reproductive Medicine</a>
+                          </td>
+                      </tr>
+                      <tr>
+                         
+                      </tr>
+                   </tbody>
+                </table>        
+            </div>
+             <hr size=8 style="COLOR: #ffd306;border-style:outset;width:490px;">
+            {#显示文章top 10#}
+            <div style="width:150px; margin-left: 100px; margin-top: 100px; display:inline" >
+                <h4>Top10 文献数量</h4>
+                <table class="table">
+                   <tbody>
+                   <tr>
+                       <td>人名</td>
+                       <td>机构</td>
+                       <td>文章数量</td>
+                       <td>领域1</td>
+                       <td>领域2</td>
+                       <td>领域3</td>
+                   </tr>
+
+                   {% for author, infor in author2paper.items() %}
+                      <tr>
+                          <td>{{ author }}</td>
+                          <td style="width:150px">{{ infor[0] }}</td>
+                          <td>{{ infor[1] }}</td>
+                          {% for jdi2num in infor[2:] %}
+                            <td>{{ jdi2num['jdi'] }} : {{ jdi2num['num'] }}</td>
+                          {% endfor %}
+                      </tr>
+                   {% endfor %}
+                   </tbody>
+                </table>
+                <hr size=8 style="COLOR: #007eb2;border-style:outset;width:490px;">
+                {#显示领域top 10#}
+                <h4>Top10 领域</h4>
+                <table class="table">
+                   <tbody>
+                      <tr>
+                       <td>人名</td>
+                       <td>机构</td>
+                       <td>文章数量</td>
+                       <td>领域数量</td>
+                       <td>领域</td>
+                      </tr>
+
+                       {% for author, infor in author2jdi_sum.items() %}
+                          <tr>
+                              <td> {{ author }}</td>
+                              <td style="width:150px">{{ infor[0] }}</td>
+                              <td>{{ infor[1] }}</td>
+                              <td>{{ infor[2] }}</td>
+                              <td>{{ infor[3] }}</td>
+                          </tr>
+                       {% endfor %}
+                   </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+    <!--SEARCH SECTION END-->
+
+
+    <!--SERVICES SECTION END-->
+
+{#    <section id="clients-sec">#}
+{#        <div class="container">#}
+{#            <div class="row">#}
+{#                <div class="col-md-12">#}
+{#                    <img src="static/img/clients.png" alt="" class="img-rounded img-responsive" />#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#        </div>#}
+{#       </section>#}
+    <!--CLIENTS SECTION END-->
+{% endblock %}
+

@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BM experts - Documentation</title>
+<link rel="alternate" type="application/rss+xml" title="egrappler.com" href="feed/index.html">
+<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet"
+        type="text/css">
+<link rel="stylesheet" href="static/css/my_style.css">
+<link rel="stylesheet" href="static/css/prettify.css">
+</head>
+<body >
+<nav>
+  <div class="container">
+    <h1>BME Doc</h1>
+    <div id="menu">
+      <ul class="toplinks">
+        <li><a href="{{ url_for('index') }}">Back to website </a></li>
+        <!-- <li><a href="http://www.egrappler.com/">eGrappler</a></li>
+        <li><a href="../doc-template/docs.html">Blue Theme</a></li>
+        <li><a href="../doc-template-red/docs.html">Red Theme</a></li> -->
+      </ul>
+    </div>
+    <a id="menu-toggle" href="#" class=" ">&#9776;</a> </div>
+</nav>
+<header>
+  <div class="container">
+    <h2 class="docs-header">BM experts Documentation</h2>
+  </div>
+</header>
+<section>
+  <div class="container">
+    <ul class="docs-nav" id="menu-left">
+      <li><strong>Getting Started</strong></li>
+      <li><a href="#welcome" class=" ">Welcome</a></li>
+      <li><a href="#benefits" class=" ">Prepare data</a></li>
+      <li><a href="#features" class=" ">Data preprocess</a></li>
+      <li><a href="#license" class=" ">Features vector</a></li>
+      <li class="separator"></li>
+      <li><strong>Customizing</strong></li>
+      <li><a href="#view_type" class=" ">View Type</a></li>
+      <li><a href="#animation_style" class=" ">Animation Styles</a></li>
+      <li><a href="#bars_text" class=" ">Bars Text</a></li>
+      <li><a href="#vote_counter" class=" ">Vote Counter</a></li>
+      <li><a href="#rating_icons" class=" ">Rating Icons</a></li>
+      <li><a href="#rating_titles" class=" ">Rating Titles</a></li>
+      <li><a href="#bar_colors" class=" ">Bar Colors</a></li>
+    </ul>
+    <div class="docs-content">
+      <h2> Getting Started</h2>
+      <h3 id="welcome"> Welcome</h3>
+      <p> This system is mainly used for expert system discovery.</p>
+      <a href="#" class="btn">Something</a>
+      <p> The purpose of our system is mining the author information from these data. Because the relationship between publication's author is complicated, we try to analysis the relation from the angle of domain. </p>
+      <h3 id="benefits"> Prepare data</h3>
+      <p>The data for our research is abstract data of Medline on May 2018, where i get data from amazon service s3. It contain about 30 million
+      	citations. We divide this part of the implementation into three steps.</p>
+      <ul>
+        <li>We use open source tool <a href="https://github.com/titipata/pubmed_parser">pubmed_parser</a>. It can parse the Medline citations data
+        	and return the important attribute information of author and publications, such as affiliation,Mesh terms,title,abstract and so on. We
+        	first test the code in local environment, and then run it in the aws EC2. The way i try to run in the several instances of aws will be 
+        	explain in details. 
+        </li>
+        <li>Run the <b>pubmed_parser</b> in instances. Fisrt we need start 11 instances. One of them use to build the postgresql database and write
+        	the parse information to <b>abstract</b> table. In the this instances, we follow the following command to build postgresql database and 
+        	table:
+        </li>
+        <ul>
+        	<li>Install postgresql in ubuntu</li>
+	        <pre class="prettyprint">
+	sudo apt-get install postgresql
+	      	</pre>
+      		<li>Change the default config</li>
+  			<pre class="prettyprint">
+        sudo vim /etc/postgresql/9.5/main/postgresql.conf
+    	sudo vim /etc/postgresql/9.5/main/pg_hba.conf
+    	sudo service postgresql restart
+	      	</pre>
+	      	<li>Create database</li>
+	      	<pre class="prettyprint">
+        sudo -u postgres psql
+        -#create database pubmed;
+	      	</pre>
+		    <li>Copy data from amazon S3, before you run aws cp, you must have the permission, please ask your adminstator. In my way, every instance proccese 100 file</li>
+  			<pre class="prettyprint">
+	    aws s3 cp [s3://your-s3-directory] [the data you want save]
+	    or aws s3 sync s3://your-s3-directory . --exclude "*" --include "pubmed18n00*" 
+	      	</pre>
+	      	<li>get open source code from github</li>
+	      	<pre class="prettyprint">
+        git clone https://github.com/titipata/pubmed_parser
+        pip install ./pubmed_parser
+	      	</pre>
+	      	<li>upload my code from local and run</li>
+	      	<pre class="prettyprint">
+	    python ~/tay/python/pubmed_parser/abstract_parser.py
+	      	</pre>      	 
+      	</ul>>
+        <li>Start the other instance</li>
+        <ul>
+        	<li>Copy data from amazon S3. In my way, every instance proccese 100 file</li>
+  			<pre class="prettyprint">
+    	aws s3 cp [s3://your-s3-directory] [the data you want save]
+    	or aws s3 sync s3://your-s3-directory . --exclude "*" --include "pubmed18n00*" 
+	      	</pre>
+	      	<li>get open source code from github</li>
+	      	<pre class="prettyprint">
+        git clone https://github.com/titipata/pubmed_parser
+        pip install ./pubmed_parser
+	      	</pre>
+	      	<li>Connect the first instance, change the code and make it parse the corresponding files</li>
+	      	<pre class="prettyprint">
+        git clone https://github.com/titipata/pubmed_parser
+        pip install ./pubmed_parser
+	      	</pre>
+	      	<li>upload my code from local and run</li>
+	      	<pre class="prettyprint">
+	    python ~/tay/python/pubmed_parser/abstract_parser.py
+	      	</pre>
+	      	<li>However, we found that there are many dumplicate in database because of the updating in the citations. So we try to delete dumplicate data</li>
+	      	<pre class="prettyprint">
+	    delete from abstract where ctid not in (select min(ctid) from abstract group by pmid)
+	      	</pre>
+	      	<li>finally get about 30 million citations' parsed information, then we save database to s3</li>
+	      	<pre class="prettyprint">
+	    pg_dump -U postgres pubmed > abstract.sql
+	      	</pre>
+        </ul>
+      </ul>
+      <h3 id="features"> Data preprocess</h3>
+      <p>As you see, 30 million records in the database is to many to make analysis. So we have the idea that extract the citations whichi author are from China or chinese organization.</p>
+      <ul>
+        <li>Build dictionaris</li>
+        <ul>
+        	<li>Chinese provinces and 1-4 line cities dictionary (156), source from wiki encyclopedia and Baidu Encyclopedia</li>
+        	<li>University names and institutions do not have a dictionary of provinces and cities, such as: National University of Defense Technology (461), source from wiki encyclopedia</li>
+        	<li>Chinese surname dictionary (441), source from Baidu library</li>
+        </ul>
+        <li>match records that its affiliation contain citis and provinces dict, if it cannot match, then we try to match author field using chinese surname dict</li>
+        <li>such we get citations records from chinese authors. It contains 1.6 million records</li>
+      </ul>
+      <p>For this system, mesh terms feild is very important, as it deciding how good or bad the publication's belonging domain. However, some records' mesh terms field is null. So we try to fill the blank field.</p>
+      <ul>
+      	<li>
+      		using tool provided by official website, but they do not provide API. So i try to imitate the procedure of getting result in the Chrome.
+      	</li>
+      	<li>
+      		using <a href="https://meshb.nlm.nih.gov/MeSHonDemand">MeSH on Demand</a>
+      	</li>
+      </ul>
+      <h3 id="license"> License</h3>
+      <p> This Feedback Collection and Polling widget is free for personal and commercial
+        projects as long as you are providing a link back to this page. If you don’t want
+        to provide a link back, simply contribute to the development and improvement of
+        this tool. To contribute to this and many other interesting projects, go to Support
+        Efforts and become a patron.</p>
+      <hr>
+      <h2> Customizing Opineo</h2>
+      <p> Before you make any cusomization or even start using Opineo create a 'div' element
+        and assign it some id. Now add references to necessary Javascrip files e.g.</p>
+      <ul>
+        <li>A reference to latest jQuery library </li>
+        <li>A reference to Opineo script file sudo nano opineo.js</li>
+      </ul>
+      <p> The following customization options are available in Opineo:</p>
+      <h3 id="view_type"> View Type</h3>
+      <ul>
+        <li>Detailed View</li>
+      </ul>
+     
+      <pre class="prettyprint">&lt;script&gt;
+      	$(document).ready(function (){
+        $('#DefaultOptions').opineo('results.php', {curvalue:3,
+            view: 'detailed',
+            animation_speed: 'super',
+            show_total_votes_counter: false,
+            show_overall_rating: true});
+         })
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Compact View</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+	$(document).ready(function (){
+	$('#CompactView').opineo('results.php',
+    	    {curvalue:3, view: 'compact',
+    	    animation_speed: 'super'});
+	})
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Mini View</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#MiniView').opineo('results.php', {curvalue:0, view: 'mini', callback: myCallback});
+    })	
+&lt;/script&gt;</pre>
+      <h3 id="animation_style"> Animation Style</h3>
+      <ul>
+        <li>Slow</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'slow'});
+    })	
+&lt;/script&gt; </pre>
+      <ul>
+        <li>Medium</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'mild'});
+    })	
+&lt;/script&gt; </pre>
+      <ul>
+        <li>Fast</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'fast'});
+    })	
+ &lt;/script&gt;</pre>
+      <ul>
+        <li>Super Fast</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'super'});
+    })	
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Ultra Fast</li>
+      </ul>
+      <pre class="prettyprint"> &lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'ultra fast'});
+    })	
+&lt;/script&gt; </pre>
+      <h3 id="bars_text"> Bars Text</h3>
+      <ul>
+        <li>Show</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:true});
+    })	
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Hide</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:false});
+    })	
+ &lt;/script&gt;</pre>
+      <h3 id="vote_counter"> Vote Counter</h3>
+      <ul>
+        <li>Show</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', show_votes_counter:true});
+    })	
+&lt;/script&gt; </pre>
+      <ul>
+        <li>Hide</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:false});
+    })	
+&lt;/script&gt;</pre>
+      <h3 id="rating_icons"> Rating Icons</h3>
+      <ul>
+        <li>Colored</li>
+        <li>Grey</li>
+      </ul>
+      <h3 id="rating_titles"> Rating Titles</h3>
+      <ul>
+        <li>Text For First Star</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Hate It'});
+    })	
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Text For Second Star</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_2_text:'Don't Like It'});
+    })	
+&lt;/script&gt; </pre>
+      <ul>
+        <li>Text For Third Star</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Its OK'});
+    })	
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Text For Fourth Star</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Like It'});
+    })	
+&lt;/script&gt;</pre>
+      <ul>
+        <li>Text For Fifth Star</li>
+      </ul>
+      <pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Love It'});
+    })	
+&lt;/script&gt;</pre>
+      <h3 id="bar_colors"> Bar Colors</h3>
+      <ul>
+        <li>Colors of Red Bar</li>
+        <li>Colors of Yellow Bar</li>
+        <li>Colors of Green Bar</li>
+      </ul>
+    </div>
+  </div>
+</section>
+{#<section class="vibrant centered">#}
+{#  <div class="container">#}
+{#    <h4> This documentation is provided free by tanganyao, which mainly documents the development process in detail.<a href="#"> here</a></h4>#}
+{#  </div>#}
+{#</section>#}
+<footer>
+  <div class="container">
+     &copy 2018 nudt | All rights reserved - <b>from tanganyao872175199@163.com</b>
+  </div>
+</footer>
+<script src="static/js/jquery.min.js"></script> 
+ 
+<script type="text/javascript" src="static/js/prettify/prettify.js"></script> 
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
+<script src="static/js/layout.js"></script>
+ <script src="static/js/jquery.localscroll-1.2.7.js" type="text/javascript"></script>
+ <script src="static/js/jquery.scrollTo-1.4.3.1.js" type="text/javascript"></script>
+
+</body>
+</html>

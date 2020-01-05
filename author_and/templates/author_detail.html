@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block my_content %}
+	<!--HOME SECTION END-->
+    <section style="height: 800px">
+        <table class="table" style="vertical-align: middle">
+              <tbody>
+                <tr style="margin-bottom: 20px">
+                    <td>
+                        {% if author_detail %}
+                            {% print(author_detail) %}
+                        {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+        </table>
+    </section>
+    <!--CLIENTS SECTION END-->
+{% endblock %}
+
