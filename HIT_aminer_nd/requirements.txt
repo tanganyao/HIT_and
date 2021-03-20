@@ -86,7 +86,7 @@ jedi==0.11.1
 jellyfish==0.6.1
 jiagu==0.1.6
 jieba==0.39
-Jinja2==2.10
+Jinja2==2.11.3
 jmespath==0.9.3
 joblib==0.13.2
 jsonschema==2.6.0
