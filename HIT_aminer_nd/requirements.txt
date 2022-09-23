@@ -157,7 +157,7 @@ ply==3.10
 preshed==2.0.1
 prometheus-client==0.7.1
 prompt-toolkit==1.0.15
-protobuf==3.6.0
+protobuf==3.18.3
 psutil==5.4.3
 psycopg2==2.7.4
 pubmed-parser==0.1
